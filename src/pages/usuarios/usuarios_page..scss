@@ -1,0 +1,27 @@
+.usuarioPageContainer {
+    padding: 60px;
+}
+
+.tableContainer {
+    width: 1000px;
+    margin: auto;
+    margin-top: 50px;
+
+
+}
+
+.tableHead {
+    font-weight: bold;
+}
+
+.buttonGroup {
+    display: grid !important;
+    width: 200px;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+}
+
+.inputsContainer {
+    margin-top: 34px;
+    margin-bottom: 34px;
+}

@@ -1,0 +1,95 @@
+
+.mouse-icon {
+  border: 2px solid #fff;
+  border-radius: 16px;
+  height: 40px;
+  width: 24px;
+  display: block;
+  z-index: 10;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100px;
+  margin: auto;
+}
+
+.mouse-icon .wheel {
+  position: relative;
+  border-radius: 10px;
+  background: #fff;
+  width: 2px;
+  height: 6px;
+  top: 4px;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-animation-name: drop;
+  -webkit-animation-duration: 1.4s;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-delay: 0s;
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-play-state: running;
+  animation-name: drop;
+  animation-duration: 1.4s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: infinite;
+  animation-play-state: running;
+}
+
+.navbar {
+  -webkit-transition: all, 0.3s;
+  transition: all, 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar {
+    -webkit-transition: none;
+    transition: none;
+  }
+}
+
+.navbar.navbar-dark .navbar-brand {
+  color: #fff;
+}
+
+.navbar.navbar-light .navbar-brand {
+  color: #1b1b1b;
+}
+
+.navbar .navbar-brand img {
+  width: 60px;
+}
+
+.navbar .nav-link {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.navbar.custom-navbar {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.navbar.custom-navbar .nav-link {
+  color: #fff;
+  margin: 0 6px;
+}
+
+.navbar.custom-navbar .nav-link:hover {
+  color: #fff;
+}
+
+.navbar.custom-navbar.affix {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+  background: #fff;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.navbar.custom-navbar.affix .nav-link {
+  color: #444;
+}
+
+.navbar.custom-navbar.affix .nav-link:hover {
+  color: #000;
+}
