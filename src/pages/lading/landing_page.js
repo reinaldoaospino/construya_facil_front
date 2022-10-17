@@ -4,18 +4,29 @@ import Avatar1 from "../../assets/imgs/avatar-1.jpg";
 import Avatar2 from "../../assets/imgs/avatar-2.jpg";
 import Avatar3 from "../../assets/imgs/avatar-3.jpg";
 import LoginDialog from "./components/login/login_dialog";
+import SignUpDialog from "./components/sign_up/sign_up_dialog";
 import "./landing_page.css";
 
 const LandingPage = () => {
-  const [ open, setOpen ] = React.useState(false);
+  const [ openLoginDialog, setOpenLoginDialog ] = React.useState(false);
+  const [ openSignUpDialog, setOpenSignUpDialog ] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleLoginOpen = () => {
+    setOpenLoginDialog(true);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleLoginClose = () => {
+    setOpenLoginDialog(false);
   };
+
+  const handleSignUpOpen = () => {
+    setOpenSignUpDialog(true);
+  };
+
+  const handleSignUpClose = () => {
+    setOpenSignUpDialog(false);
+  };
+
 
   return (
     <>
@@ -67,10 +78,18 @@ const LandingPage = () => {
                 </li>
                 <li className="nav-item">
                   <a
-                    onClick={handleClickOpen}
+                    onClick={handleLoginOpen}
                     className="ml-4 nav-link btn btn-primary btn-sm rounded"
                   >
                     Login
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    onClick={handleSignUpOpen}
+                    className="ml-4 nav-link btn btn-secondary btn-sm rounded"
+                  >
+                    Registrar                 
                   </a>
                 </li>
               </ul>
@@ -303,8 +322,11 @@ const LandingPage = () => {
           </div>
         </section>
         {/* End Contact Section */}
-        <Dialog open={open} onClose={handleClose} maxWidth="lg" >
+        <Dialog open={openLoginDialog} onClose={handleLoginClose} maxWidth="lg" >
           {<LoginDialog />}
+        </Dialog>
+        <Dialog open={openSignUpDialog} onClose={handleSignUpClose} maxWidth="lg" >
+          {<SignUpDialog />}
         </Dialog>
       </div>
     </>

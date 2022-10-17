@@ -3190,10 +3190,19 @@ fieldset:disabled a.btn {
   box-shadow: 0 0 0 0.2rem rgba(238, 90, 36, 0.5);
 }
 
-.btn-outline-danger {
-  color: #eb4d4b;
-  border-color: #eb4d4b;
+.btn-create{
+  color: white !important;
+  border-color: green !important;
+  background-color: green !important;
 }
+
+
+.btn-outline-danger {
+  color: white !important;
+  border-color: #eb4d4b !important;
+  background-color: red !important;
+}
+
 
 .btn-outline-danger:hover {
   color: #fff;

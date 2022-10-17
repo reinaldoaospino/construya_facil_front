@@ -1,7 +1,13 @@
-import { Button, TextField } from "@mui/material";
+import React from 'react'
+import { Button, CircularProgress, TextField } from "@mui/material";
 import { useForm } from "react-hook-form";
 
+
 import "./login_dialog.scss";
+import useFetchWithLoader from '../../../../hooks/useFechWithLoader';
+import { login } from '../../../../services/auth-service';
+import { useNavigate } from 'react-router-dom';
+import Spinner from '../../../../components/spinner/spinner';
 
 const LoginDialog = () => {
   const {
@@ -10,30 +16,54 @@ const LoginDialog = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const { loading, callEndpoint } = useFetchWithLoader();
+  const navigate = useNavigate();
+
+  const [ loginError, setLoginError ] = React.useState(false);
+
+
+  const onSubmit = async (data) => {
+    const response = await callEndpoint(login(data.correo, data.contrasena))
+
+    if (response.status === 200) {
+      navigate("admin/proyectos")
+      return
+    }
+
+    setLoginError(true)
+
+  };
 
   return (
     <div className="login_container">
       <form onSubmit={handleSubmit(onSubmit)}>
         <h3 className="text-center">Inicia sesion en tu cuenta</h3>
         <TextField
-          id="outlined-basic"
+          id="correo"
           label="Correo"
           variant="outlined"
           type="email"
           {...register("correo", { required: true })}
         />
         <TextField
-          id="outlined-basic"
+          id="contrasena"
           label="Contraseña"
           variant="outlined"
           type="password"
+          autoComplete='off'
           {...register("contrasena", { required: true })}
         />
         <Button variant="contained" type="submit">
           Ingresar
         </Button>
+        {
+          loginError ?
+            <h6 className='text-center'>Usuario y/o contraseña incorrecto</h6> : null
+        }
       </form>
+      {
+        loading ? <Spinner /> : null
+      }
     </div>
   );
 };

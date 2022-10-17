@@ -93,3 +93,7 @@
 .navbar.custom-navbar.affix .nav-link:hover {
   color: #000;
 }
+
+.nav-item a{
+  cursor: pointer;
+}

@@ -1,0 +1,14 @@
+.confirmarDialog-container {
+    width: 552px;
+    height: 100px;
+
+    .buttons-wrap {
+
+        display: flex;
+        justify-content: center;
+
+        :last-child {
+            margin-left: 90px;
+        }
+    }
+}
