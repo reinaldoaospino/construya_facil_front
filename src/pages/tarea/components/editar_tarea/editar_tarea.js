@@ -7,81 +7,65 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import MenuItem from '@mui/material/MenuItem';
+import { getProyectosByFilter } from '../../../../services/proyecto-service';
+import useFetchWithLoader from '../../../../hooks/useFechWithLoader';
+import { getAllUsers } from '../../../../services/usuario-service';
+import useSessionStorage from '../../../../hooks/useSessionStorage';
 
-const ReactHookFormSelect = ({
-    name,
-    label,
-    defaultValue,
-    children,
-    control,
-    ...props
-}) => {
-    const labelId = `${name}-label`;
-    console.log(props)
-    return (
-        <FormControl {...props}>
-            <InputLabel id={labelId}>{label}</InputLabel>
-            <Controller
-                render={({ field }) => <Select labelId={labelId} label={label}>
-                    {children}
-                </Select>}
-                name="firstName"
-                control={control}
-                defaultValue={defaultValue}
-            />
-        </FormControl>
-    );
-};
 
-const tareas = {
+
+const tareaInitialState = {
+    data:
+    {
+        id: null,
+        nombre: null,
+        proyectoNombre: null,
+        fechaInicio: null,
+        fechaFin: null,
+        estado: null,
+        empleado: null,
+        proyectoName: null
+    },
+
+}
+
+const proyectoInitialState = {
     data: [
         {
-            id: 1,
-            name: "Comprar productos",
-            proyectoNombre: "Construccion cancha de tenis",
-            fechaInicio: dayjs('2022-10-10T21:11:54'),
-            fechaFin: dayjs('2023-10-10T21:11:54'),
-            estado: 1,
-            empleado: 2
-        },
-        {
-            id: 2,
-            name: "Comprar decoracion",
-            proyectoNombre: "Construccion cancha de tenis",
-            fechaInicio: dayjs('2022-10-10T21:11:54'),
-            fechaFin: dayjs('2023-10-10T21:11:54'),
-            estado: 2,
-            empleado: 1
-
-        },
-        {
-            id: 3,
-            name: "Comprar muebles",
-            proyectoNombre: "Construccion cancha de tenis",
-            fechaInicio: dayjs('2022-10-10T21:11:54'),
-            fechaFin: dayjs('2023-10-10T21:11:54'),
-            estado: 3,
-            empleado: 3
-
-        },
+            id: null,
+            nombre: null,
+        }
     ]
 }
 
 
-const tareaInitialState = {
-    data: {
-        id: null,
-        name: null,
-        proyectoNombre: null,
-        fechaInicio: null,
-        fechaFin: null,
-        estado: 1,
-        empleado: null
-    }
+
+const userInitialState = {
+    data: [
+        {
+
+            id: null,
+            name: null,
+            lastName: null,
+            email: null
+        }
+    ]
 }
 
-function EditarTarea({ idTarea, handleClose }) {
+function EditarTarea({ tareaData, handleClose }) {
     const [ tarea, setTarea ] = React.useState(tareaInitialState.data)
+    const [ proyectos, setProyectos ] = React.useState(proyectoInitialState.data);
+    const [ usuarios, setUsuarios ] = React.useState(userInitialState.data);
+
+    const [ inicioValue, setinicioValue ] = React.useState(dayjs(tareaData?.fechaInicio));
+    const [ finValue, setfinValue ] = React.useState(dayjs(tareaData?.fechaFin));
+    const [ estadoValue, setEstadoValue ] = React.useState(tareaData?.estado);
+    const [ proyectoValue, setProyectoValue ] = React.useState();
+    const [ usuarioValue, setUsuarioValue ] = React.useState();
+    const { loading, callEndpoint } = useFetchWithLoader();
+    const { getValue: getSessionToken } = useSessionStorage('managamentUserToken')
+    const userSession = getSessionToken()
+
     const {
         register,
         handleSubmit,
@@ -93,22 +77,76 @@ function EditarTarea({ idTarea, handleClose }) {
 
 
     React.useEffect(() => {
-        const tarea = tareas.data.find(x => x.id === idTarea)
-        setTarea(tarea)
-        let defaultValues = {
-            nombre: tarea.name,
-            fechaInicio: tarea.fechaInicio,
-            fechaFin: tarea.fechaFin,
-            estado: tarea.estado,
-            empleado: tarea.empleado
 
+        const getProyectos = async () => {
+            const response = await callEndpoint(
+                getProyectosByFilter('', userSession.empresaId)
+            )
+
+            if (response?.status === 200) {
+                setProyectos(response?.data)
+                setProyectoValue(tareaData?.proyectoId)
+            }
         }
-        reset({ ...defaultValues })
+
+        const getUsuarios = async () => {
+            const response = await callEndpoint(
+                getAllUsers()
+            )
+
+            if (response?.status === 200) {
+                setUsuarios(response?.data)
+                setUsuarioValue(tareaData?.userId)
+            }
+        }
+
+        getProyectos();
+
+        getUsuarios();
+
+        tarea.id = tareaData.id
+        tarea.nombre = tareaData.nombre;
+        tarea.fechaInicio = tareaData.fechaInicio
+        tarea.fechaFin = tareaData.fechaFin
+        tarea.estado = tareaData.estado
+        tarea.userId = tareaData.userId
+        tarea.proyectoId = tareaData.proyectoValue
+        setTarea(tarea)
     }, [])
 
 
 
-    const onSubmit = (data) => console.log(data);
+    const onSubmit = (data) => {
+        tarea.nombre = data.nombre;
+        tarea.fechaInicio = inicioValue
+        tarea.fechaFin = finValue
+        tarea.estado = estadoValue
+        tarea.userId = usuarioValue
+        tarea.proyectoId = proyectoValue
+        setTarea(tarea);
+        handleClose(tarea);
+    }
+
+    const handleInicioChange = (newValue) => {
+        setinicioValue(newValue);
+    };
+
+    const handleFinChange = (newValue) => {
+        setfinValue(newValue);
+    };
+
+    const handleEstadoChange = (event) => {
+        setEstadoValue(event.target.value);
+    };
+
+    const handleProyectoChange = (event) => {
+        setProyectoValue(event.target.value);
+    };
+
+
+    const handleUsuarioChange = (event) => {
+        setUsuarioValue(event.target.value);
+    };
 
     return (
         <div className='editarTarea_container'>
@@ -118,50 +156,79 @@ function EditarTarea({ idTarea, handleClose }) {
                     label="Nombre"
                     variant="outlined"
                     type="text"
+                    defaultValue={tareaData?.nombre}
                     {...register("nombre", { required: true })}
                 />
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
 
                     <DesktopDatePicker
+                        id="fechaInicio"
                         label="Fecha Inicio"
-                        inputFormat="DD/MM/YYYY"
+                        name="fechaInicio"
+                        value={inicioValue}
+                        onChange={handleInicioChange}
                         renderInput={(params) => <TextField {...params} />}
-                        {...register("fechaInicio", { required: true })}
                     />
                     <DesktopDatePicker
+                        id="fechaFin"
                         label="Fecha Fin"
-                        inputFormat="DD/MM/YYYY"
+                        name="fechaFin"
+                        value={finValue}
+                        onChange={handleFinChange}
                         renderInput={(params) => <TextField {...params} />}
-                        {...register("fechaFin", { required: true })}
                     />
                 </LocalizationProvider>
+                <FormControl fullWidth>
+                    <InputLabel id="estadoSelectLabel">Estado</InputLabel>
+                    <Select
+                        labelId="estadoSelectLabel"
+                        id="estadoSelect"
+                        value={estadoValue}
+                        label="Estado"
+                        onChange={handleEstadoChange}
+                    >
+                        <MenuItem value={0}>Por Hacer</MenuItem>
+                        <MenuItem value={1}>En Progreso</MenuItem>
+                        <MenuItem value={2}>Finalizado</MenuItem>
+                    </Select>
+                </FormControl>
 
-                <ReactHookFormSelect
-                    id="estado"
-                    name="estado"
-                    label="Estado"
-                    control={control}
-                    variant="outlined"
-                    margin="normal"                       
+                {proyectos && proyectoValue &&
+                    <FormControl fullWidth>
+                        <InputLabel id="proyectoSelectLabel">Proyecto</InputLabel>
+                        <Select
+                            labelId="proyectoSelectLabel"
+                            id="proyectoSelect"
+                            value={proyectoValue ? proyectoValue : ''}
+                            label="proyecto"
+                            onChange={handleProyectoChange}
+                        >
+                            {proyectos.map((item, index) =>
+                                <MenuItem key={item.id} value={item.id}>{item.nombre}</MenuItem>
+                            )}
+                        </Select>
+                    </FormControl>
+                }
 
-                >
-                    <MenuItem value={1}>Por hacer</MenuItem>
-                    <MenuItem value={2}>En progreso</MenuItem>
-                    <MenuItem value={3}>Finalizado</MenuItem>
-                </ReactHookFormSelect>
-                <Select
-                    labelId="empleadoLabel"
-                    id="empleadoId"
-                    value={tarea.empleado ?? ''}
-                    label="Empleado"
-                    {...register("empleado", { required: true })}
-                >
-                    <MenuItem value={1}>Maxi</MenuItem>
-                    <MenuItem value={2}>Jorge</MenuItem>
-                    <MenuItem value={3}>Carlos</MenuItem>
 
-                </Select>
-                <Button onClick={handleClose} variant="contained" type="submit">
+                {usuarios && usuarioValue &&
+                    <FormControl fullWidth>
+                        <InputLabel id="usuariopSelectLabel">Usuarios</InputLabel>
+                        <Select
+                            labelId="usuariopSelectLabel"
+                            id="usuarioSelect"
+                            value={usuarioValue ? usuarioValue : ''}
+                            label="usuario"
+                            onChange={handleUsuarioChange}
+                        >
+                            {usuarios.map((item, index) =>
+                                <MenuItem key={item.id} value={item.id}>{item.name}  {item.lastName}</MenuItem>
+                            )}
+                        </Select>
+                    </FormControl>
+                }
+
+                <Button variant="contained" type="submit">
                     Guardar
                 </Button>
             </form>

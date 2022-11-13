@@ -8,6 +8,8 @@ import Header from './components/header/header';
 import AdminContainer from './components/adminContainer/adminContainer';
 import ProyectoPage from './pages/proyecto/proyecto_page';
 import TareaPage from './pages/tarea/tarea_page';
+import ProtectedRoute from './components/protectedRoute/protectedRoute';
+import ReportPage from './pages/report/report';
 
 function App() {
   return (
@@ -15,9 +17,20 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path='/admin' element={<AdminContainer />} >
-          <Route path="usuarios" element={<UsuariosPage />} />
-          <Route path="proyectos" element={<ProyectoPage />} />
-          <Route path="tareas" element={<TareaPage />} />
+          <Route path="usuarios" element={<ProtectedRoute>
+            <UsuariosPage />
+          </ProtectedRoute>} />
+
+          <Route path="proyectos" element={<ProtectedRoute>
+            <ProyectoPage />
+          </ProtectedRoute>} />
+          <Route path="tareas" element={<ProtectedRoute>
+            <TareaPage />
+          </ProtectedRoute>} />
+
+          <Route path="reporte" element={<ProtectedRoute>
+            <ReportPage />
+          </ProtectedRoute>} />
         </Route>
       </Routes>
     </>

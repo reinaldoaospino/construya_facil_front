@@ -9,34 +9,21 @@ instance.defaults.baseURL = config.API_URL;
 instance.defaults.headers.common[ 'Accept' ] = 'application/json';
 instance.defaults.headers.common[ 'Content-Type' ] = 'application/json';
 
-export const GetUserById = id => {
+export const GetProyectoById = id => {
     const controller = loadAbourt();
     return {
-        call: instance.get('/user/' + id, {
+        call: instance.get('/proyecto/' + id, {
             signal: controller.signal,
         }),
         controller,
     };
 };
 
-export const getAllUsers = () => {
-    const controller = loadAbourt();
-    return {
-        call: instance.get('/user', {
-            signal: controller.signal,
-        }),
-        controller,
-    };
-};
-
-export const getUsersByFilter = (text, empresaId) => {
-    var url = '/user/getByFilter'
-    if (text) {
-        url = url + '?text=' + text
-    }
+export const getProyectosByFilter = (text, empresaId) => {
+    var url = '/proyecto/getByFilter?text=' + text
 
     if (empresaId) {
-        url = url + '?empresaId=' + empresaId
+        url = url + '&empresaId=' + empresaId
     }
     const controller = loadAbourt();
     return {
@@ -47,10 +34,10 @@ export const getUsersByFilter = (text, empresaId) => {
     };
 };
 
-export const CreateUser = payload => {
+export const CreateProyecto = payload => {
     const controller = loadAbourt();
     return {
-        call: instance.post('/user', {
+        call: instance.post('/proyecto', {
             ...payload,
             signal: controller.signal,
         }),
@@ -58,10 +45,10 @@ export const CreateUser = payload => {
     };
 };
 
-export const UpdateUser = payload => {
+export const UpdateProyecto = payload => {
     const controller = loadAbourt();
     return {
-        call: instance.put('/user', {
+        call: instance.put('/proyecto', {
             ...payload,
             signal: controller.signal,
         }),
@@ -70,10 +57,10 @@ export const UpdateUser = payload => {
 };
 
 
-export const DeleteUser = id => {
+export const DeleteProyecto = id => {
     const controller = loadAbourt();
     return {
-        call: instance.delete('/user/' + id, {
+        call: instance.delete('/proyecto/' + id, {
             signal: controller.signal,
         }),
         controller,

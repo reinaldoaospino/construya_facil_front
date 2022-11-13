@@ -7,8 +7,8 @@ const ConfirmarDialog = ({ handleClose }) => {
             <h3 className='text-center'>¿Confirmas operacion?</h3>
             <div className='buttons-wrap'>
 
-                <Button variant="contained" className='btn-outline-danger' onClick={handleClose}>Si</Button>
-                <Button variant="contained" onClick={handleClose}>No</Button>
+                <Button variant="contained" className='btn-outline-danger' onClick={()=>handleClose('si')}>Si</Button>
+                <Button variant="contained" onClick={()=>handleClose('no')}>No</Button>
             </div>
         </div>
     )

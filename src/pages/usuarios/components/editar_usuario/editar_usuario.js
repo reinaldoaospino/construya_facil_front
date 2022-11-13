@@ -1,31 +1,11 @@
 import { Button, TextField } from '@mui/material';
 import React from 'react'
 import { useForm } from 'react-hook-form';
+import useFetchWithLoader from '../../../../hooks/useFechWithLoader';
+import { GetUserById } from '../../../../services/usuario-service';
 import './editar_usuario.scss'
 
-const users = {
-    data: [
-        {
 
-            id: 1,
-            name: 'Jose',
-            lastName: 'Hernandez',
-            email: 'jose.hernandez@gmail.com'
-        },
-        {
-            id: 2,
-            name: 'Max',
-            lastName: 'Perez',
-            email: 'max.perez@gmail.com'
-        },
-        {
-            id: 3,
-            name: 'Monica',
-            lastName: 'Colmenares',
-            email: 'monica.colmenares@gmail.com'
-        }
-    ]
-}
 
 const userInitialState = {
     data: {
@@ -37,8 +17,9 @@ const userInitialState = {
 }
 
 
-const EditarUsuario = ({ idUsuario, handleClose }) => {
-    const [ user, setUser ] = React.useState(userInitialState.data)
+const EditarUsuario = ({ userData, handleClose }) => {
+    const [ user, setUser ] = React.useState(userInitialState.data)    
+
     const {
         register,
         handleSubmit,
@@ -46,18 +27,23 @@ const EditarUsuario = ({ idUsuario, handleClose }) => {
         reset
     } = useForm();
 
-    React.useEffect(() => {
-        const user = users.data.find(x => x.id === idUsuario)
+    React.useEffect(() => {   
+        user.id = userData.id     
+        user.name = userData.name;
+        user.lastName = userData.lastName;
+        user.email = userData.email;
         setUser(user)
-        let defaultValues = {
-            nombre: user.name,
-            apellido: user.lastName,
-            correo: user.email
-        }
-        reset({ ...defaultValues })
+
     }, [])
 
-    const onSubmit = (data) => console.log(data);
+    const onSubmit = (data) => {
+
+        user.name = data.nombre;
+        user.lastName = data.apellido;
+        user.email = data.correo;
+        setUser(user)
+        handleClose(user)
+    }
 
     return (
         <div className='editarUsuario_container'>
@@ -67,7 +53,7 @@ const EditarUsuario = ({ idUsuario, handleClose }) => {
                     label="Nombre"
                     variant="outlined"
                     type="text"
-                    value={user.name ?? ''}
+                    defaultValue={userData?.name}
                     {...register("nombre", { required: true })}
                 />
                 <TextField
@@ -75,8 +61,7 @@ const EditarUsuario = ({ idUsuario, handleClose }) => {
                     label="Apellido"
                     variant="outlined"
                     type="text"
-                    value={user.lastName ?? ''}
-
+                    defaultValue={userData?.lastName}
                     {...register("apellido", { required: true })}
                 />
                 <TextField
@@ -84,11 +69,10 @@ const EditarUsuario = ({ idUsuario, handleClose }) => {
                     label="Correo"
                     variant="outlined"
                     type="text"
-                    value={user.email ?? ''}
-
+                    defaultValue={userData?.email}
                     {...register("correo", { required: true })}
                 />
-                <Button onClick={handleClose} variant="contained" type="submit">
+                <Button variant="contained" type="submit">
                     Guardar
                 </Button>
             </form>

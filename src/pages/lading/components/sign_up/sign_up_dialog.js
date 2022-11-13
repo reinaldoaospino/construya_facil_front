@@ -26,8 +26,8 @@ const SignUpDialog = () => {
         if (data.contrasena_1 !== data.contrasena_2) {
             setContrasenaIguales(false)
             return;
-        }
-        const response = await callEndpoint(sigUp(data.nombre, data.apellido, data.correo, data.contrasena_1))
+        }        
+        const response = await callEndpoint(sigUp(data.nombre, data.apellido, data.correo, data.contrasena_1,data.empresa))
         if (response.status === 200) {
             navigate("admin/proyectos")
         }
@@ -57,6 +57,15 @@ const SignUpDialog = () => {
                     variant="outlined"
                     type="email"
                     {...register("correo", { required: true })}
+            
+                />
+                 <TextField
+                    id="empresa"
+                    label="Empresa"
+                    variant="outlined"
+                    type="text"
+                    autoComplete='off'
+                    {...register("empresa", { required: true })}
                 />
                 <TextField
                     id="contrasena_1"

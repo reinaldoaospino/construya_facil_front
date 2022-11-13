@@ -5,6 +5,11 @@
 }
 
 .buttonNavigationWrap {
-    box-shadow: 5px 6px 10px -6px rgba(0,0,0,0.95);
+    box-shadow: 5px 6px 10px -6px rgba(0, 0, 0, 0.95);
     justify-content: end !important;
+
+    h5 {
+        margin: auto;
+        margin-left: 178px;
+    }
 }

@@ -26,13 +26,15 @@ export const login = (email, password) => {
     };
 };
 
-export const sigUp = ( name, lasName, email, password ) => {
+export const sigUp = ( name, lastName, email, password, nombreEmpresa ) => {    
     const payload = {
         name,
-        lasName,
+        lastName,
         email,
-        password
+        password,
+        nombreEmpresa
     }
+
     const controller = loadAbourt();
     return {
         call: instance.post('/auth/signup', {

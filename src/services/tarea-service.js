@@ -9,35 +9,27 @@ instance.defaults.baseURL = config.API_URL;
 instance.defaults.headers.common[ 'Accept' ] = 'application/json';
 instance.defaults.headers.common[ 'Content-Type' ] = 'application/json';
 
-export const GetUserById = id => {
+export const GetTareaById = id => {
     const controller = loadAbourt();
     return {
-        call: instance.get('/user/' + id, {
+        call: instance.get('/tarea/' + id, {
             signal: controller.signal,
         }),
         controller,
     };
 };
 
-export const getAllUsers = () => {
-    const controller = loadAbourt();
-    return {
-        call: instance.get('/user', {
-            signal: controller.signal,
-        }),
-        controller,
-    };
-};
+export const getTareasByFilter = (text, proyectoId) => {
 
-export const getUsersByFilter = (text, empresaId) => {
-    var url = '/user/getByFilter'
+    var url = '/tarea/getByFilter'
     if (text) {
         url = url + '?text=' + text
     }
 
-    if (empresaId) {
-        url = url + '?empresaId=' + empresaId
+    if (proyectoId) {
+        url = url + '?proyectoId=' + proyectoId
     }
+
     const controller = loadAbourt();
     return {
         call: instance.get(url, {
@@ -47,10 +39,10 @@ export const getUsersByFilter = (text, empresaId) => {
     };
 };
 
-export const CreateUser = payload => {
+export const CreateTarea = payload => {
     const controller = loadAbourt();
     return {
-        call: instance.post('/user', {
+        call: instance.post('/tarea', {
             ...payload,
             signal: controller.signal,
         }),
@@ -58,10 +50,10 @@ export const CreateUser = payload => {
     };
 };
 
-export const UpdateUser = payload => {
+export const UpdateTarea = payload => {
     const controller = loadAbourt();
     return {
-        call: instance.put('/user', {
+        call: instance.put('/tarea', {
             ...payload,
             signal: controller.signal,
         }),
@@ -70,10 +62,10 @@ export const UpdateUser = payload => {
 };
 
 
-export const DeleteUser = id => {
+export const DeleteTarea = id => {
     const controller = loadAbourt();
     return {
-        call: instance.delete('/user/' + id, {
+        call: instance.delete('/tarea/' + id, {
             signal: controller.signal,
         }),
         controller,
